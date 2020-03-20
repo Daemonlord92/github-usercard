@@ -10,6 +10,46 @@
    Skip to Step 3.
 */
 
+const gitHubCard = (data) => {
+  const newCard = document.createElement('div')
+  const newImage = document.createElement('img')
+  const newCardInfo = document.createElement('div')
+  const gitHubName = document.createElement('h3')
+  const gitHubUserName = document.createElement('p')
+  const gitHubLocation = document.createElement('p')
+  const gitHubProfile = document.createElement('a')
+  const gitHubFollowerCount = document.createElement('p')
+  const gitHubFollowingCount = document.createElement('p')
+  const gitHubBio = document.createElement('p')
+
+  newCard.classList.add('card')
+  newCardInfo.classList.add('card-info')
+  gitHubName.classList.add('name')
+  gitHubUserName.classList.add('username')
+
+  gitHubName.textContent = data.name
+  gitHubUserName.textContent = data.login
+  newImage.src = data.avatar_url
+  gitHubLocation.textContent = data.location
+  gitHubProfile.src = data.html_url
+  gitHubProfile.textContent = data.html_url
+  gitHubFollowerCount.textContent = data.followers
+  gitHubFollowingCount.textContent = data.following
+  gitHubBio.textContent = data.bio
+
+
+  newCard.appendChild(newImage)
+  newCard.appendChild(newCardInfo)
+  newCardInfo.appendChild(gitHubName)
+  newCardInfo.appendChild(gitHubUserName)
+  newCardInfo.appendChild(gitHubLocation)
+  newCardInfo.appendChild(gitHubProfile)
+  newCardInfo.appendChild(gitHubFollowerCount)
+  newCardInfo.appendChild(gitHubFollowingCount)
+  newCardInfo.appendChild(gitHubBio)
+
+  return newCard
+}
 /* Step 4: Pass the data received from Github into your function, 
            create a new component and add it to the DOM as a child of .cards
 */
@@ -24,7 +64,7 @@
           user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+const followersArray = ['dalinhuang99', 'jake100', 'rfthusn', 'TheTrabin', 'dcornelison1216'];
 
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
@@ -53,3 +93,23 @@ const followersArray = [];
   luishrd
   bigknell
 */
+
+axios.get("https://api.github.com/users/Daemonlord92")
+.then(response => {
+  console.log(response)
+  const daemonGit = gitHubCard(response.data)
+  const entryPoint = document.querySelector('.cards')
+  entryPoint.appendChild(daemonGit)
+})
+.catch(err => {
+  console.log('ERROR WILL ROBERTSON', err)
+})
+
+followersArray.forEach(user => {
+  axios.get(`https://api.github.com/users/${user}`)
+  .then(response => {
+    const newCard = gitHubCard(response.data)
+    const entryPoint = document.querySelector('.cards')
+    entryPoint.appendChild(newCard)
+  })
+})
